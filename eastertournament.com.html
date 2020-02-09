@@ -1,0 +1,227 @@
+<!--
+eastertournament.com etusivu
+Toivo Snåre 2020
+-->
+
+<link rel="stylesheet" href="https://unpkg.com/swiper/css/swiper.css">
+<style>
+    body {
+        background-color: #777;
+        background-image: url("/@Bin/544808/tausta.jpg");
+        background-repeat: repeat;
+        background-attachment: fixed;
+        background-position: center;
+        -webkit-background-size: cover;
+        -moz-background-size: cover;
+        -o-background-size: cover;
+        background-size: cover;
+    }
+    #token-544677, #token-544635, #token-307593 {
+        display: none;
+    }
+    .main {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+    }
+    .slider {
+        position: relative;
+        width: 100%;
+        padding-bottom: 56%;
+    }
+    .swiper-container {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+    }
+    .swiper-slide {
+        background-position: center;
+        background-size: cover;
+        width: 100% !important;
+        height: 100%;
+    }
+    .sponsorit {
+        width: 100%;
+        height: auto;
+        text-align: center;
+    }
+    .sponsorit img {
+        padding: 10px;
+        display: inline-block;
+        width: 280px;
+        height: 150px !important;
+        object-fit: scale-down;
+        vertical-align: middle;
+    }
+    .uutiset {
+        width: 100%;
+        height: auto;
+        text-align: center;
+        padding-top: 10px;
+    }
+    .uutiset .uutinen {
+        padding: 10px;
+        width: 280px;
+        height: auto;
+        display: inline-block;
+        text-align: left;
+        overflow: hidden;
+        text-decoration: none;
+        vertical-align: top;
+    }
+    .uutiset .uutinen a:hover {
+        background-color: rgba(0, 0, 0, 0.05);
+        text-decoration: none;
+    }
+    .uutiset .uutinen .kuva {
+        width: 280px;
+        height: 280px;
+        overflow: hidden;
+        position: relative;
+    }
+    .uutiset .uutinen .kuva img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        filter: brightness(0.15)
+    }
+    .uutiset .uutinen .kuva h1 {
+        color: white;
+        position: absolute;
+        left: 10px;
+        bottom: 0px;
+    }
+    .uutiset .uutinen p {
+        margin-top: 5px;
+        margin-bottom: 5px;
+        color: black;
+        word-wrap: break-word;
+    }
+    .some {
+        width: 100%;
+        height: auto;
+        text-align: center;
+    }
+    .some div {
+        padding: 10px;
+        width: 280px;
+        height: 500px;
+        display: inline-block;
+        overflow: hidden;
+    }
+    .some .instagram-media {
+        min-width: 280px !important;
+    }
+</style>
+<div class="main">
+    <div class="slider">
+        <div class="swiper-container">
+            <div class="swiper-wrapper">
+                <script>
+                    Array.prototype.forEach.call(document.getElementById('token-544677').getElementsByClassName('filename'), function(file) {
+                        let slideDiv = document.createElement('a')
+                        slideDiv.href = file.textContent.split(')')[1]
+                        slideDiv.target = '_blank'
+                        slideDiv.className = 'swiper-slide'
+                        let imageUrl = file.getElementsByTagName('a')[0].href
+                        slideDiv.style = 'width: 100%; background-image: url("' + imageUrl + '");'
+                        document.querySelector('.swiper-wrapper').appendChild(slideDiv)
+                    })
+                </script>
+            </div>
+            <div class="swiper-pagination swiper-pagination-white"></div>
+            <div class="swiper-button-prev swiper-button-white"></div>
+            <div class="swiper-button-next swiper-button-white"></div>
+        </div>
+    </div>
+    <div class="uutiset">
+        <script>
+            fetch('https://www.eastertournament.com/@News/Select?PAGE=/&_eid=307593&Tpl=RSS').then((res) => {
+                res.text().then((xmlTxt) => {
+                    var domParser = new DOMParser()
+                    let doc = domParser.parseFromString(xmlTxt, 'text/xml')
+                    let items = doc.querySelectorAll('item')
+                    for (var i = 0; i < Math.min(3, items.length); i++) {
+                        let articleDiv = document.createElement('a')
+                        articleDiv.className = 'uutinen'
+                        articleDiv.href = items[i].querySelector('link').textContent
+                        document.querySelector('.uutiset').appendChild(articleDiv)
+
+                        let imageDiv = document.createElement('div')
+                        imageDiv.className = 'kuva'
+                        articleDiv.appendChild(imageDiv)
+
+                        let image = document.createElement('img')
+                        let contentParser = new DOMParser()
+                        let contentDom = contentParser.parseFromString(items[i].lastChild.textContent, 'text/html')
+                        let img = contentDom.getElementsByTagName('img')[0]
+                        if(img == null) {
+                            image.src = '/@Bin/544787/oletuskuva.jpg'
+                        } else {
+                            image.src = img.src
+                        }
+                        imageDiv.appendChild(image)
+
+                        let title = document.createElement('h1')
+                        title.textContent = items[i].querySelector('title').textContent
+                        imageDiv.appendChild(title)
+
+                        let content = document.createElement('p')
+                        content.textContent = contentDom.getElementsByTagName('p')[0].textContent
+                        articleDiv.appendChild(content)
+
+                        let readMore = document.createElement('a')
+                        readMore.textContent = "Lue lisää"
+                        // readMore.href = items[i].querySelector('link').textContent
+                        articleDiv.appendChild(readMore)
+                    }
+                })
+            })
+        </script>
+    </div>
+    <div class="sponsorit">
+        <script>
+            Array.prototype.forEach.call(document.getElementById('token-544635').getElementsByClassName('filename'), function(file) {
+                let link = document.createElement('a')
+                link.href = file.textContent.split(')')[1]
+                link.target = '_blank'
+                document.querySelector('.sponsorit').appendChild(link)
+
+                let image = document.createElement('img')
+                image.src = file.getElementsByTagName('a')[0].href
+                link.appendChild(image)
+            })
+        </script>
+    </div>
+    <div class="some">
+        <div><iframe src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Feastertournamentlahti%2F&tabs=timeline&width=280&height=500&small_header=true&adapt_container_width=false&hide_cover=false&show_facepile=true&appId" width="280" height="500" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowTransparency="true" allow="encrypted-media"></iframe></div>
+        <div><a class="twitter-timeline" data-lang="fi" data-width="280" data-height="500" data-theme="light" href="https://twitter.com/LaBaJuniorit?ref_src=twsrc%5Etfw">Tweets by LaBaJuniorit</a> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script></div>
+        <div><iframe id="ig" width="280" height="500" frameborder="0" scrolling="no" allowtransparency="true"></iframe></div>
+    </div>
+</div>
+<script src="https://unpkg.com/swiper/js/swiper.js"></script>
+<script>
+    var mySwiper = new Swiper ('.swiper-container', {
+        direction: "horizontal",
+        loop: true,
+        autoplay: {
+            delay: 5000,
+        },
+        pagination: {
+            el: '.swiper-pagination',
+        },
+        navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+        },
+    })
+    var username = "eastertournament2020"
+    fetch("https://www.instagram.com/" + username + "/?__a=1").then((res) => {
+        res.text().then((jsonText) => {
+            var obj = JSON.parse(jsonText)
+            var shortcode = obj.graphql.user.edge_owner_to_timeline_media.edges[0].node.shortcode
+            document.getElementById("ig").src = "https://www.instagram.com/p/" + shortcode + "/embed"
+        })
+    })
+</script>
